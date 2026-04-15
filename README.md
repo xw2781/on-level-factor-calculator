@@ -1,15 +1,20 @@
 # OLEP Calculator
 
-Desktop calculator for quarter in-force dates and OLEP weight formulas, backed by an active Excel workbook.
+Desktop tool for generating quarter weights and visualizing on-level factor calculations.
 
 ![OLEP Calculator UI](docs/images/olep-calculator-ui-preview.png)
 
-## Important Notes
+## Who This Is For
 
-- The original app was developed in 2022.
-- The core calculation algorithm has been verified extensively in production use.
-- There is a known minor issue for 6-month policies that span a leap year: the calculation can show slight rounding variance because the logic does not account for 366-day years.
-- This build keeps the same core calculation behavior while refactoring the app into a more modernized UI.
+This tool is intended for actuarial and ratemaking users who perform on-level calculations in spreadsheets, especially teams that do not have access to vendor software and have built their own spreadsheet-based process.
+
+## Background
+
+The original app was developed in 2022. The initial motivation for this app was to create a more automated OLEP calculation workflow for spreadsheet-based users. It is an enhancement to manual OLF calculations, keeping the familiar workbook-driven process while reducing repetitive manual steps and making quarter weight generation easier to review and reuse. The core calculation algorithm has been verified extensively in production use. The current build keeps the same core calculation behavior while presenting it through a refactored, modernized UI.
+
+## Current Limitations
+
+- For 6-month policies that span a leap year, the calculation can show slight rounding variance because the current logic does not account for 366-day years.
 
 ## Overview
 
@@ -20,12 +25,26 @@ This project wraps the existing Excel-based calculation workflow in a desktop ap
 - React + Vite for the user interface
 - PyWebView for the desktop window shell
 
-The app reads the currently active workbook, sheet, and selected cell from Microsoft Excel, then calculates:
+The app is designed to work directly with spreadsheets and supports the typical on-level factor workflow:
 
-- effective date ranges
-- in-force dates for a selected quarter
-- quarter weight formulas
-- clipboard-ready formula output
+1. It reads the currently active Excel workbook, worksheet, and selected date header cell, then generates quarter weights for on-level factors based on policy effective dates and policy term.
+2. It plots the quarter parallelogram so users can see the weight contribution for each rate level visually.
+
+In practice, the app helps users:
+
+- inspect effective date ranges from the active workbook
+- calculate in-force dates for a selected quarter
+- generate quarter weight formulas and numeric results
+- copy formula output to the clipboard
+- visualize the quarter exposure map for each rate level
+
+## Example Workflow
+
+1. Open the target workbook in Excel and select the policy effective date header cell.
+2. Inspect the workbook to confirm the detected date ranges and anchor location.
+3. Choose the target quarter and policy term.
+4. Generate quarter weights and copy the resulting formulas.
+5. Review the quarter parallelogram plot to see the weight contribution by rate level.
 
 ## Requirements
 
