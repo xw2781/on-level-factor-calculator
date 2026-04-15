@@ -1,0 +1,7 @@
+fastapi
+openpyxl
+pydantic
+pywebview
+pywin32==303
+python-dateutil
+uvicorn
