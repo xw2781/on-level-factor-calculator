@@ -1,0 +1,59 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build-windows-release:
+    runs-on: windows-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: "npm"
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Install frontend dependencies
+        working-directory: frontend
+        run: npm ci
+
+      - name: Create virtual environment
+        run: python -m venv .venv
+
+      - name: Install Python dependencies
+        run: .\.venv\Scripts\python.exe -m pip install -r requirements.txt pyinstaller
+
+      - name: Validate tag matches app version
+        shell: pwsh
+        run: |
+          $tagVersion = "${{ github.ref_name }}".TrimStart("v")
+          $appVersion = & .\.venv\Scripts\python.exe -c "from backend.version import __version__; print(__version__)"
+          if ($tagVersion -ne $appVersion) {
+            throw "Tag version '$tagVersion' does not match backend.version.py '$appVersion'."
+          }
+
+      - name: Build release bundle
+        shell: pwsh
+        run: .\scripts\build_release.ps1
+
+      - name: Publish GitHub release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: dist/release/*.zip
+          generate_release_notes: true

@@ -11,3 +11,4 @@ frontend/dist/
 frontend/*.tsbuildinfo
 build/
 dist/
+commit_and_push.bat

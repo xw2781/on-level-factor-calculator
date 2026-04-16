@@ -7,12 +7,13 @@ from fastapi.responses import FileResponse, HTMLResponse
 from fastapi.staticfiles import StaticFiles
 
 from backend.models import AppOptionsResponse, InforceResponse, QuarterRequest, WeightResponse, WorkbookSnapshotResponse
+from backend.runtime import get_app_base_dir
 from backend.services.calculator import CalculatorError, CalculatorService
 from backend.services.excel_session import ExcelSessionError
 from backend.version import __version__
 
 
-BASE_DIR = Path(__file__).resolve().parent.parent
+BASE_DIR = get_app_base_dir()
 FRONTEND_DIST_DIR = BASE_DIR / "frontend" / "dist"
 
 app = FastAPI(title="OLEP Calculator", version=__version__)

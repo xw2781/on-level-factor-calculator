@@ -99,6 +99,44 @@ This launches:
 
 In dev mode, Vite proxies `/api` requests back to the Python backend automatically, so edits under `frontend/src` should refresh in the desktop window without rebuilding `frontend/dist`.
 
+## Releases
+
+Windows releases are built as packaged desktop bundles from the version in `backend/version.py`.
+
+### Create a Local Release Build
+
+```powershell
+.\scripts\build_release.ps1
+```
+
+The script will:
+
+- build the frontend from `frontend/src`
+- package the desktop app with PyInstaller
+- create a zip file under `dist/release/`
+
+Prerequisites:
+
+- `.venv` exists and has the project requirements installed
+- `pyinstaller` is installed in `.venv`
+- `frontend/node_modules` exists
+- a Node runtime is available through `NODE_EXE`, `PATH`, or `node-portable`
+
+### Publish a GitHub Release
+
+Push a tag that matches `backend/version.py` exactly:
+
+```powershell
+git tag v7.3.0
+git push origin v7.3.0
+```
+
+The GitHub Actions workflow in `.github/workflows/release.yml` will:
+
+- build the frontend
+- package the Windows desktop app
+- upload the zip bundle to a GitHub Release
+
 ## Run
 
 1. Open Microsoft Excel.

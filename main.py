@@ -14,9 +14,10 @@ import uvicorn
 import webview
 
 from backend.app import app
+from backend.runtime import get_app_base_dir
 
 
-BASE_DIR = Path(__file__).resolve().parent
+BASE_DIR = get_app_base_dir()
 FRONTEND_DIR = BASE_DIR / "frontend"
 ICON_PATH = BASE_DIR / "frontend" / "public" / "favicon.ico"
 FRONTEND_DEV_HOST = "127.0.0.1"
