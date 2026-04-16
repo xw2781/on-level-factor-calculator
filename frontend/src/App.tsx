@@ -13,9 +13,14 @@ import type {
   WorkbookSnapshotResponse,
 } from './lib/types';
 
+function currentQuarterForDate(date: Date): 1 | 2 | 3 | 4 {
+  return (Math.floor(date.getMonth() / 3) + 1) as 1 | 2 | 3 | 4;
+}
+
+const launchDate = new Date();
 const defaultSelection: QuarterRequest = {
-  year: new Date().getFullYear(),
-  quarter: 1,
+  year: launchDate.getFullYear(),
+  quarter: currentQuarterForDate(launchDate),
   policy_term_months: 12,
 };
 
@@ -63,10 +68,12 @@ export default function App() {
       <header className="hero">
         <div>
           <p className="eyebrow">OLEP Calculator</p>
-          <h1>Modern desktop UI, same Excel calculation core.</h1>
+          <h1>
+            <span className="no-wrap">Parallelogram Method</span> OLF Calculator
+          </h1>
           <p className="hero-copy">
-            This build keeps the original quarter-weight logic in Python while moving the desktop
-            experience into a lighter React interface.
+            Calculate on-level factors with the parallelogram method in your existing Excel
+            workbook workflow.
           </p>
         </div>
         <div className="hero-status">
@@ -81,24 +88,27 @@ export default function App() {
         selection={selection}
         isBusy={isBusy}
         onSelectionChange={setSelection}
-        onInspect={() =>
+        onInspect={(nextSelection) =>
           void runRequest(async () => {
-            const payload = await api.inspectWorkbook(selection);
+            const payload = await api.inspectWorkbook(nextSelection);
             setWorkbook(payload);
+            setSelection(nextSelection);
             setStatusMessage(`Loaded ${payload.sheet_name} from the active Excel workbook.`);
           })
         }
-        onInforce={() =>
+        onInforce={(nextSelection) =>
           void runRequest(async () => {
-            const payload = await api.getInforceDates(selection);
+            const payload = await api.getInforceDates(nextSelection);
             setInforceResult(payload);
+            setSelection(nextSelection);
             setStatusMessage(`Calculated in-force dates for ${payload.selection_label}.`);
           })
         }
-        onWeights={() =>
+        onWeights={(nextSelection) =>
           void runRequest(async () => {
-            const payload = await api.getWeights(selection);
+            const payload = await api.getWeights(nextSelection);
             setWeightResult(payload);
+            setSelection(nextSelection);
             setShowPlot(true);
             setStatusMessage(
               payload.copied_to_clipboard

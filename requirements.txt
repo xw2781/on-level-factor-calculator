@@ -2,6 +2,6 @@ fastapi
 openpyxl
 pydantic
 pywebview
-pywin32==303
+pywin32==311
 python-dateutil
 uvicorn

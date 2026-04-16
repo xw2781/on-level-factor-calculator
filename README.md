@@ -82,6 +82,23 @@ cd ..
 
 `main.py` serves the built frontend from `frontend/dist`, so the build step is required before launching the desktop app.
 
+### Hot Reload Development
+
+For direct UI text and layout edits with immediate feedback, use the desktop app in dev mode:
+
+```powershell
+.\.venv\Scripts\Activate.ps1
+python main.py --dev
+```
+
+This launches:
+
+- the FastAPI backend on a local random port
+- the Vite dev server on `http://127.0.0.1:4173`
+- the PyWebView desktop window pointed at the Vite app
+
+In dev mode, Vite proxies `/api` requests back to the Python backend automatically, so edits under `frontend/src` should refresh in the desktop window without rebuilding `frontend/dist`.
+
 ## Run
 
 1. Open Microsoft Excel.
@@ -92,6 +109,13 @@ cd ..
 ```powershell
 .\.venv\Scripts\Activate.ps1
 python main.py
+```
+
+For hot reload while editing frontend text or styles:
+
+```powershell
+.\.venv\Scripts\Activate.ps1
+python main.py --dev
 ```
 
 ## Project Layout
@@ -110,3 +134,4 @@ README.md             Project documentation
 - The app version is defined in `backend/version.py`.
 - The desktop icon and favicon are stored at `frontend/public/favicon.ico`.
 - If the UI says the frontend build is missing, run `npm install` and `npm run build` inside `frontend`.
+- If frontend text edits do not appear immediately, use `python main.py --dev` instead of the built `dist` workflow.
